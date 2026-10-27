@@ -1,18 +1,21 @@
 # KNN Trader — EUR/USD M1 Price-Excursion Probability Model
 
-Research software for estimating EUR/USD price-excursion probabilities from a five-dimensional K-nearest-neighbours (KNN) representation of the last five completed one-minute candles. The research includes volatility-regime filtering, temporal de-clustering, first-hit outcomes, chronological validation, and post-hoc probability calibration.
+Research project documenting a five-dimensional k-nearest-neighbours (KNN) model for EUR/USD price-excursion probabilities, first-hit outcomes, chronological evaluation, and post-hoc probability calibration.
 
-> **Research only — not financial advice.** Probability improvements do not establish profitability. Do not use with live capital without independent reproduction, robust out-of-sample testing, and realistic execution costs.
+> **Research only — not financial advice.** Probability improvements do not establish profitability. Validate independently before risking capital.
 
 ## Project concept
 
-At each completed M1 candle, construct the vector of the last five open-to-close log returns, find historical analogues, filter candidates by volatility regime and temporal proximity, and use weighted neighbours to estimate the probability of hitting price barriers over the next five observed candles.
+At each completed M1 candle, construct a vector of the last five open-to-close log returns, find historical analogues, filter candidates by volatility regime and temporal proximity, and use weighted neighbours to estimate probabilities of hitting price barriers over the next five observed candles.
 
-The system reports:
-- Probabilities of upward and downward barrier touches from 1 to 10 pips.
-- Ending-close direction and return estimates.
-- First-hit probabilities for target-first, stop-first, neither, and ambiguous same-candle touches.
-- Raw and calibrated probabilities, per-event scoring metrics, and reliability-bin diagnostics.
+The intended full project includes upward/downward barrier-touch probabilities from 1 to 10 pips, ending-close direction/return estimates, first-hit probabilities, and raw/calibrated forecasts with reliability diagnostics.
+
+## Documentation in this repository
+
+- [Mathematical Model](docs/MATHEMATICAL_MODEL.md)
+- [Calibration Study](docs/CALIBRATION_STUDY.md)
+- [Experiment Log](docs/EXPERIMENT_LOG.md)
+- [Synchronization Status](PROJECT_SYNC_STATUS.md)
 
 ## Reported calibration results
 
@@ -28,29 +31,12 @@ Lower is better. Binary Brier improvement is modest (~0.95% relative), while mea
 
 ## Data caveat
 
-Although the input filename suggested coverage from January 2024, the processed CSV contained **98,851 valid rows from 2026-03-10 through 2026-06-15**. Verify actual timestamp coverage, timezone, missing minutes, and broker feed before reproducing. The forecast horizon means the next five observed rows, which is not necessarily five wall-clock minutes when there are gaps.
+The processed CSV contained **98,851 valid rows from 2026-03-10 through 2026-06-15**, although its filename suggested a longer date range. Verify timestamp coverage, timezone, missing minutes, and broker feed before reproducing. The horizon means the next five observed rows, not necessarily five wall-clock minutes when there are gaps.
 
-## Mathematical specification
+## Reproducibility safeguards
 
-See [Mathematical Model](docs/MATHEMATICAL_MODEL.md), [Calibration Study](docs/CALIBRATION_STUDY.md), and [Experiment Log](docs/EXPERIMENT_LOG.md).
+Use chronological train/validation/test splits; exclude neighbours whose future label horizon has not completed; fit calibration only on validation forecasts; keep final test periods untouched; and include spread, commissions, slippage, latency, and conservative handling of ambiguous OHLC barrier touches in any trading backtest.
 
-For candle i, (r_i=\ln(C_i/O_i)). The feature vector is
-(x_t=[r_{t-4},r_{t-3},r_{t-2},r_{t-1},r_t]\in\mathbb{R}^5).
-Historical labels use the next five candles' high/low path and are only eligible once that full horizon has completed.
+## Current repository state
 
-## Reproducibility protocol
-
-1. Use chronological train/validation/test splits; never shuffle time-series rows.
-2. Exclude neighbours whose future label horizon overlaps the forecast timestamp.
-3. Fit and select calibration only on validation forecasts; freeze before final test.
-4. Report Brier score, log loss, calibration/reliability bins, and first-hit multiclass scores.
-5. Include spread, commissions, slippage, latency, missed fills, and conservative handling of ambiguous OHLC barrier touches in any trading backtest.
-6. Keep final test periods untouched while iterating on model design.
-
-## Environment
-
-Python 3.10+ recommended. Install dependencies from `requirements.txt` and run tests with `python -m pytest -q`. Check the scripts' `--help` for the exact command-line interface. Store raw market data locally; do not commit private account data or credentials.
-
-## Current status
-
-The working project reported eight passing calibration tests, successful Python compilation, and ZIP integrity verification on 2026-10-27. The original local package included model/calibration scripts, tests, reports, metrics, and prediction exports. Each result should be re-run against the exact input data and recorded with a source commit, data fingerprint, dependency versions, split dates, and configuration before being treated as reproducible.
+**The source-code and test synchronization is not yet complete in this GitHub commit.** See [Synchronization Status](PROJECT_SYNC_STATUS.md). Do not assume this documentation-only snapshot is independently runnable yet.
