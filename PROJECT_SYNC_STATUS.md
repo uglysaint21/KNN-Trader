@@ -2,32 +2,38 @@
 
 Updated: 2026-10-27
 
-## What is currently saved in this GitHub repository
+## Uploaded to GitHub
 
-This initial synchronization contains:
-- Project overview and reported calibration metrics.
+- Project README and setup notes.
 - Mathematical model specification.
-- Calibration method and evaluation notes.
-- Experiment log and research backlog.
-- Dependency manifest, `.gitignore`, and MIT license.
+- Calibration methodology and experiment log.
+- Main model and calibration result reports.
+- Calibration test suite.
+- Dependency manifest, ignore rules, and license.
+- This synchronization status record.
 
-## What remains to be synchronized from the validated local project package
+## Still not uploaded from the validated local ZIP
 
-The working package at the time of this note also contained:
+The implementation files remain missing from this repository:
 - `knn_price_excursion.py` — main KNN model and chronological evaluation.
 - `knn_excursion_calibration.py` — binary and multiclass calibration pipeline.
-- `tests/test_knn_excursion_calibration.py` — automated tests (reported 8 passing).
-- `results/` — original run reports, metrics, validation/test predictions, calibration report, per-event metrics, reliability bins, and calibrated prediction exports.
 
-These implementation and generated-result files have **not** been committed in this initial GitHub synchronization. The project ZIP was available in the ChatGPT working environment as `/mnt/data/knn_price_excursion_project.zip`; that local path is not a public GitHub artifact.
+Generated output files also remain missing:
+- `results/summary_metrics.json`
+- `results/validation_predictions_baseline.csv`
+- `results/validation_predictions_filtered_adaptive.csv`
+- `results/test_predictions_baseline.csv`
+- `results/test_predictions_filtered_adaptive.csv`
+- `results/latest_test_prediction_sample.csv`
+- `results/calibrated/calibration_summary.json`
+- `results/calibrated/calibration_binary_test_metrics.csv`
+- `results/calibrated/calibration_reliability_bins.csv`
+- `results/calibrated/test_predictions_filtered_adaptive_calibrated.csv`
 
-## Before future iterations
+These were present in the validated local ZIP at `/mnt/data/knn_price_excursion_project.zip`, but the available GitHub connector supports creating repository text blobs rather than transferring files directly from the local filesystem. The prediction CSVs are several megabytes each, so they have not been copied into this repository in this pass.
 
-Synchronize the exact validated source and tests, then run:
+## Important
 
-```bash
-python -m py_compile knn_price_excursion.py knn_excursion_calibration.py
-python -m pytest -q tests
-```
+This repository is **not yet a fully runnable source backup** because both Python implementation files are still absent. The test suite has been committed, but cannot run from the repository until the calibration script is synchronized. Do not treat the documentation-only model description as a replacement for the implementation.
 
-Keep raw market data outside version control unless its provenance/license and repository-size implications have been checked. Record a data fingerprint and configuration for reproducibility.
+Raw OHLC market data should remain outside Git unless its provenance/license and repository-size implications have been checked. Preserve a data fingerprint and exact configuration for reproducibility.

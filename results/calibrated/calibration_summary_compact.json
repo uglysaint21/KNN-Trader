@@ -1,0 +1,44 @@
+{
+  "project": "KNN EUR/USD M1 price-excursion model",
+  "source_data": {
+    "valid_rows": 98851,
+    "first_timestamp": "2026-03-10 01:20",
+    "last_timestamp": "2026-06-15 23:59",
+    "note": "Actual processed range is shorter than the filename suggests."
+  },
+  "calibration_split": {
+    "validation_forecasts": 2965,
+    "calibrator_fit_rows": 1779,
+    "method_selection_rows": 1186,
+    "test_forecasts": 2965,
+    "final_test_used_for_selection": false
+  },
+  "binary_test_raw": {
+    "mean_brier": 0.07733010654697692,
+    "mean_log_loss": 0.2503508359934029,
+    "mean_ece_10": 0.020302626578412735,
+    "events_evaluated": 21
+  },
+  "binary_test_calibrated": {
+    "mean_brier": 0.07659353364951549,
+    "mean_log_loss": 0.24614341720800598,
+    "mean_ece_10": 0.009638939968988765,
+    "events_evaluated": 21,
+    "selected_method": "sigmoid"
+  },
+  "first_hit_test_raw": {
+    "mean_brier": 0.33302873105127095,
+    "mean_log_loss": 0.6079709951954227,
+    "pairs_evaluated": 8
+  },
+  "first_hit_test_calibrated": {
+    "mean_brier": 0.3307488190580981,
+    "mean_log_loss": 0.6041144723171762,
+    "pairs_evaluated": 8
+  },
+  "interpretation": [
+    "These are historical probability-scoring diagnostics, not proof of a profitable trading edge.",
+    "Trading costs and executable fills are not modeled.",
+    "Raw full-size prediction exports and the complete original calibration JSON remain in the local ZIP and are not yet in GitHub."
+  ]
+}
