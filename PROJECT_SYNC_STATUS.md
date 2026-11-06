@@ -1,24 +1,33 @@
 # Project Synchronization Status
 
-Updated: 2026-10-27
+Updated: 2026-11-06
 
-## Uploaded to GitHub
+## Restored to GitHub
+
+The two missing implementation modules have now been restored from the validated project files in the user's Library:
+
+- `knn_price_excursion.py` — five-dimensional KNN price-excursion model, chronological evaluation, neighbour filtering, weighted predictions, and metrics.
+- `knn_excursion_calibration.py` — binary sigmoid/isotonic calibration, multiclass temperature scaling, monotonic projection, reliability diagnostics, and reports.
+
+The repository also contains:
 
 - Project README and setup notes.
 - Mathematical model specification.
 - Calibration methodology and experiment log.
 - Main model and calibration result reports.
-- Calibration test suite.
-- Dependency manifest, ignore rules, and license.
-- This synchronization status record.
+- Calibration test suite (`tests/test_knn_excursion_calibration.py`).
+- Dependency manifest (`requirements.txt`), ignore rules, and license.
 
-## Still not uploaded from the validated local ZIP
+## Verification performed in this synchronization pass
 
-The implementation files remain missing from this repository:
-- `knn_price_excursion.py` — main KNN model and chronological evaluation.
-- `knn_excursion_calibration.py` — binary and multiclass calibration pipeline.
+- Both restored Python modules passed `python -m py_compile`.
+- The existing test suite and dependency manifest were confirmed present in GitHub.
+- The full pytest suite was **not executed** in this pass; do not interpret syntax compilation as a passing test suite.
 
-Generated output files also remain missing:
+## Still not uploaded
+
+Generated output files remain outside the repository:
+
 - `results/summary_metrics.json`
 - `results/validation_predictions_baseline.csv`
 - `results/validation_predictions_filtered_adaptive.csv`
@@ -30,10 +39,17 @@ Generated output files also remain missing:
 - `results/calibrated/calibration_reliability_bins.csv`
 - `results/calibrated/test_predictions_filtered_adaptive_calibrated.csv`
 
-These were present in the validated local ZIP at `/mnt/data/knn_price_excursion_project.zip`, but the available GitHub connector supports creating repository text blobs rather than transferring files directly from the local filesystem. The prediction CSVs are several megabytes each, so they have not been copied into this repository in this pass.
+The prediction CSVs are several megabytes each. Raw OHLC market data should remain outside Git unless its provenance/license and repository-size implications have been checked. Preserve a data fingerprint and exact configuration for reproducibility.
 
-## Important
+## Research limitations and next steps
 
-This repository is **not yet a fully runnable source backup** because both Python implementation files are still absent. The test suite has been committed, but cannot run from the repository until the calibration script is synchronized. Do not treat the documentation-only model description as a replacement for the implementation.
+The processed input previously used contained 98,851 valid rows from 2026-03-10 through 2026-06-15, despite a filename suggesting a longer period. Verify timestamp coverage, timezone, missing minutes, weekend gaps, duplicates, and bid/ask conventions before reproducing.
 
-Raw OHLC market data should remain outside Git unless its provenance/license and repository-size implications have been checked. Preserve a data fingerprint and exact configuration for reproducibility.
+Recommended next work:
+1. Run the complete pytest suite in a clean environment using `requirements.txt`.
+2. Reproduce the model and calibration outputs from the original OHLC input, recording its fingerprint and exact environment/configuration.
+3. Expand chronological rolling-origin evaluation across multiple non-overlapping periods and use block-bootstrap uncertainty intervals.
+4. Compare against unconditional event-rate, volatility-only, and logistic baselines.
+5. Only after forecast robustness is established, evaluate a separate executable trading policy with spread, commissions, slippage, latency, missed fills, conservative ambiguous-bar treatment, drawdown, and risk-of-ruin analysis.
+
+This repository now contains the implementation source, but it is not yet a fully reproducible experiment bundle because the original data and generated prediction outputs are not committed.
