@@ -4,52 +4,32 @@ Updated: 2026-11-06
 
 ## Restored to GitHub
 
-The two missing implementation modules have now been restored from the validated project files in the user's Library:
+The two implementation modules have been restored from the validated project files in the user's Library:
 
-- `knn_price_excursion.py` — five-dimensional KNN price-excursion model, chronological evaluation, neighbour filtering, weighted predictions, and metrics.
-- `knn_excursion_calibration.py` — binary sigmoid/isotonic calibration, multiclass temperature scaling, monotonic projection, reliability diagnostics, and reports.
+- `knn_price_excursion.py` — five-dimensional KNN price-excursion model and chronological evaluation.
+- `knn_excursion_calibration.py` — binary/multiclass calibration, monotonic projection, reliability diagnostics, and reports.
 
-The repository also contains:
+The repository also contains the README, mathematical/calibration documentation, experiment notes, dependency manifest, and calibration tests.
 
-- Project README and setup notes.
-- Mathematical model specification.
-- Calibration methodology and experiment log.
-- Main model and calibration result reports.
-- Calibration test suite (`tests/test_knn_excursion_calibration.py`).
-- Dependency manifest (`requirements.txt`), ignore rules, and license.
+## Stage 1 verification — completed test portion
 
-## Verification performed in this synchronization pass
+- `python -m py_compile knn_price_excursion.py knn_excursion_calibration.py`: passed.
+- `python -m pytest -q`: **8 passed**.
+- Environment and limitations are recorded in `STAGE1_VERIFICATION.md`.
+- This was not a clean-room installation test. `pip check` reported an unrelated moviepy/Pillow version conflict in the shared environment.
 
-- Both restored Python modules passed `python -m py_compile`.
-- The existing test suite and dependency manifest were confirmed present in GitHub.
-- The full pytest suite was **not executed** in this pass; do not interpret syntax compilation as a passing test suite.
+## Still required for full end-to-end reproducibility
 
-## Still not uploaded
+The original EUR/USD M1 OHLC input and matching validation prediction CSV were not located in accessible project files. A test prediction CSV exists in the Library, but this is not enough to reproduce the entire model/calibration pipeline.
 
-Generated output files remain outside the repository:
+Previously documented dataset metadata says 98,851 valid rows spanning 2026-03-10 through 2026-06-15. Verify this against the actual file; do not treat the filename as proof of a longer history.
 
-- `results/summary_metrics.json`
-- `results/validation_predictions_baseline.csv`
-- `results/validation_predictions_filtered_adaptive.csv`
-- `results/test_predictions_baseline.csv`
-- `results/test_predictions_filtered_adaptive.csv`
-- `results/latest_test_prediction_sample.csv`
-- `results/calibrated/calibration_summary.json`
-- `results/calibrated/calibration_binary_test_metrics.csv`
-- `results/calibrated/calibration_reliability_bins.csv`
-- `results/calibrated/test_predictions_filtered_adaptive_calibrated.csv`
+Next:
+1. Recover the exact source OHLC file and matching validation predictions.
+2. Record SHA-256 fingerprints, feed/timezone details, data-quality checks, exact configuration, and package environment.
+3. Re-run the model and calibration pipeline and compare generated metrics with archived results.
+4. Only after reproducibility, expand rolling-origin validation and benchmark comparisons.
 
-The prediction CSVs are several megabytes each. Raw OHLC market data should remain outside Git unless its provenance/license and repository-size implications have been checked. Preserve a data fingerprint and exact configuration for reproducibility.
+Generated prediction files remain outside Git unless specifically needed and size/licensing have been checked. Raw market data should not be committed without provenance/license review.
 
-## Research limitations and next steps
-
-The processed input previously used contained 98,851 valid rows from 2026-03-10 through 2026-06-15, despite a filename suggesting a longer period. Verify timestamp coverage, timezone, missing minutes, weekend gaps, duplicates, and bid/ask conventions before reproducing.
-
-Recommended next work:
-1. Run the complete pytest suite in a clean environment using `requirements.txt`.
-2. Reproduce the model and calibration outputs from the original OHLC input, recording its fingerprint and exact environment/configuration.
-3. Expand chronological rolling-origin evaluation across multiple non-overlapping periods and use block-bootstrap uncertainty intervals.
-4. Compare against unconditional event-rate, volatility-only, and logistic baselines.
-5. Only after forecast robustness is established, evaluate a separate executable trading policy with spread, commissions, slippage, latency, missed fills, conservative ambiguous-bar treatment, drawdown, and risk-of-ruin analysis.
-
-This repository now contains the implementation source, but it is not yet a fully reproducible experiment bundle because the original data and generated prediction outputs are not committed.
+Passing unit tests verifies software behavior covered by those tests; it does not prove predictive edge or profitability.
